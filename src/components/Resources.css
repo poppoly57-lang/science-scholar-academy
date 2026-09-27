@@ -1,0 +1,360 @@
+
+.ssa-resources {
+  --ssa-navy: #173a8a;
+  --ssa-cyan: #079fe8;
+  --ssa-text: #273449;
+  --ssa-muted: #68758a;
+  --ssa-border: #e3eaf3;
+
+  padding: 100px 24px;
+  background: #ffffff;
+  color: var(--ssa-text);
+}
+
+.ssa-resources-container {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.ssa-resources-heading {
+  max-width: 720px;
+  margin: 0 auto 52px;
+  text-align: center;
+}
+
+.ssa-resources-eyebrow {
+  display: inline-block;
+  margin-bottom: 16px;
+  color: var(--ssa-cyan);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.ssa-resources-heading h2 {
+  margin: 0;
+  color: var(--ssa-navy);
+  font-size: clamp(32px, 4.5vw, 48px);
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  font-weight: 800;
+}
+
+.ssa-resources-heading h2 span {
+  color: var(--ssa-cyan);
+}
+
+.ssa-resources-heading > p {
+  max-width: 620px;
+  margin: 20px auto 0;
+  color: var(--ssa-muted);
+  font-size: 16px;
+  line-height: 1.8;
+}
+
+.ssa-resources-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 22px;
+}
+
+.ssa-resource-card {
+  display: flex;
+  min-width: 0;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 28px 24px;
+  border: 1px solid var(--ssa-border);
+  border-radius: 16px;
+  background: #ffffff;
+  transition:
+    transform 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.ssa-resource-card:hover {
+  transform: translateY(-5px);
+  border-color: #b7ddf7;
+  box-shadow: 0 16px 35px rgba(23, 58, 138, 0.08);
+}
+
+.ssa-resource-card-top {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 26px;
+}
+
+.ssa-resource-icon {
+  display: grid;
+  width: 52px;
+  height: 52px;
+  place-items: center;
+  border-radius: 13px;
+  background: #eaf7ff;
+  color: var(--ssa-navy);
+  font-size: 27px;
+  font-weight: 700;
+}
+
+.ssa-resource-number {
+  color: #b7c4d6;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.ssa-resource-access {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-bottom: 17px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+}
+
+.ssa-resource-access.public {
+  color: #0879b5;
+}
+
+.ssa-resource-access.members {
+  color: var(--ssa-navy);
+}
+
+.ssa-access-dot {
+  width: 7px;
+  height: 7px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--ssa-cyan);
+}
+
+.ssa-resource-card h3 {
+  margin: 0 0 12px;
+  color: var(--ssa-navy);
+  font-size: 21px;
+  font-weight: 750;
+  line-height: 1.3;
+}
+
+.ssa-resource-card > p {
+  flex: 1;
+  margin: 0 0 24px;
+  color: var(--ssa-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.ssa-resource-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--ssa-navy);
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.ssa-resource-link:hover {
+  color: var(--ssa-cyan);
+}
+
+.ssa-resources-subjects {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  align-items: center;
+  gap: 48px;
+  margin-top: 76px;
+  padding: 36px;
+  border: 1px solid var(--ssa-border);
+  border-radius: 18px;
+  background: #f8fbff;
+}
+
+.ssa-subjects-intro .ssa-resources-eyebrow {
+  margin-bottom: 12px;
+}
+
+.ssa-subjects-intro h3 {
+  margin: 0 0 12px;
+  color: var(--ssa-navy);
+  font-size: 26px;
+  line-height: 1.25;
+}
+
+.ssa-subjects-intro p {
+  margin: 0;
+  color: var(--ssa-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.ssa-subject-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.ssa-subject-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 10px 13px;
+  border: 1px solid #dce7f5;
+  border-radius: 8px;
+  background: #ffffff;
+  color: var(--ssa-navy);
+  font-size: 12px;
+  font-weight: 650;
+  line-height: 1.4;
+}
+
+.ssa-subject-tag span {
+  color: var(--ssa-cyan);
+  font-size: 15px;
+  font-weight: 800;
+}
+
+.ssa-resources-cta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+  margin-top: 28px;
+  padding: 38px 42px;
+  border-radius: 18px;
+  background: var(--ssa-navy);
+  color: #ffffff;
+}
+
+.ssa-cta-label {
+  display: inline-block;
+  margin-bottom: 10px;
+  color: #7bd4ff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.ssa-resources-cta h3 {
+  margin: 0 0 10px;
+  color: #ffffff;
+  font-size: clamp(22px, 3vw, 30px);
+  line-height: 1.3;
+}
+
+.ssa-resources-cta p {
+  max-width: 600px;
+  margin: 0;
+  color: #d7e4fa;
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.ssa-cta-button {
+  display: inline-flex;
+  min-width: max-content;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 15px 22px;
+  border: 1px solid var(--ssa-cyan);
+  border-radius: 8px;
+  background: var(--ssa-cyan);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 750;
+  text-decoration: none;
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.ssa-cta-button:hover {
+  transform: translateY(-2px);
+  background: #078bd0;
+}
+
+@media (max-width: 1000px) {
+  .ssa-resources-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ssa-resources-subjects {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+}
+
+@media (max-width: 600px) {
+  .ssa-resources {
+    padding: 68px 18px;
+  }
+
+  .ssa-resources-heading {
+    margin-bottom: 34px;
+  }
+
+  .ssa-resources-heading h2 {
+    letter-spacing: -0.8px;
+  }
+
+  .ssa-resources-heading > p {
+    font-size: 14px;
+  }
+
+  .ssa-resources-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .ssa-resource-card {
+    padding: 24px 22px;
+  }
+
+  .ssa-resources-subjects {
+    margin-top: 48px;
+    padding: 25px 20px;
+  }
+
+  .ssa-subjects-intro h3 {
+    font-size: 23px;
+  }
+
+  .ssa-subject-tags {
+    gap: 8px;
+  }
+
+  .ssa-subject-tag {
+    font-size: 11px;
+  }
+
+  .ssa-resources-cta {
+    align-items: flex-start;
+    flex-direction: column;
+    margin-top: 18px;
+    padding: 28px 23px;
+  }
+
+  .ssa-cta-button {
+    width: 100%;
+    box-sizing: border-box;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ssa-resource-card,
+  .ssa-resource-link,
+  .ssa-cta-button {
+    transition: none;
+  }
+
+  .ssa-resource-card:hover,
+  .ssa-cta-button:hover {
+    transform: none;
+  }
+}
