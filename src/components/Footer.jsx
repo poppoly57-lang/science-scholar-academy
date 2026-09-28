@@ -61,7 +61,15 @@ export default function Footer() {
 			<div className="site-footer__bottom">
 				<p>© {new Date().getFullYear()} Science Scholar Academy. All rights reserved.</p>
 				<div className="site-footer__bottom-actions">
-					<a href="/#home">Back to Top <span aria-hidden="true">↑</span></a>
+					<a
+						href="#"
+						onClick={(event) => {
+							event.preventDefault()
+							window.scrollTo({ top: 0, behavior: 'smooth' })
+						}}
+					>
+						Back to Top <span aria-hidden="true">↑</span>
+					</a>
 					<p className="site-footer__attribution">
 						Designed &amp; Developed by{' '}
 						<a href="https://polifolio.poppoly57.workers.dev/" target="_blank" rel="noopener noreferrer">

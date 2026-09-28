@@ -5,8 +5,8 @@ const navigationLinks = [
   { label: 'Home', href: '/#home' },
   { label: 'About', href: '/about/' },
   { label: 'Programs', href: '/courses/' },
-  { label: 'Resources', href: '/#resources' },
-  { label: 'Community', href: '/#community' },
+  { label: 'Resources', href: '/resources/' },
+  { label: 'Community', href: '/community/' },
 ]
 
 export default function Navbar() {
