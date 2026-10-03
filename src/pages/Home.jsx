@@ -4,6 +4,18 @@ import FAQ from '../components/FAQ.jsx'
 import Footer from '../components/Footer.jsx'
 import './Home.css'
 
+const ANDROID_APP_URL = ''
+const IOS_APP_URL = ''
+
+const appFeatures = [
+	{ symbol: '▶', title: 'Interactive video lessons', detail: 'Learn with guided video content.' },
+	{ symbol: '▤', title: 'Offline eLibrary', detail: 'Keep study materials close at hand.' },
+	{ symbol: '✳', title: 'SSA AI Tutor', detail: 'Get support as you study.' },
+	{ symbol: '▦', title: 'eClassroom', detail: 'Connect with your learning space.' },
+	{ symbol: '✓', title: 'eExams', detail: 'Prepare with exam activities.' },
+	{ symbol: '⌕', title: 'Learning resources', detail: 'Find useful material for your subjects.' },
+]
+
 const subjects = [
 	{
 		id: 'physics',
@@ -90,6 +102,17 @@ function DashboardPreview() {
 	)
 }
 
+function AppDownloadButton({ platform, url }) {
+	const platformLabel = platform === 'Android' ? 'ANDROID APP' : 'iOS APP'
+	const buttonContent = <><span className="home-app__store-mark" aria-hidden="true">{platform === 'Android' ? 'A' : 'i'}</span><span><small>{platformLabel}</small><strong>{url ? 'Get the app' : 'Link coming soon'}</strong></span><b aria-hidden="true">{url ? '↗' : '·'}</b></>
+
+	if (!url) {
+		return <button className="home-app__download" type="button" disabled aria-label={`${platform} app link coming soon`}>{buttonContent}</button>
+	}
+
+	return <a className="home-app__download" href={url} target="_blank" rel="noopener noreferrer">{buttonContent}</a>
+}
+
 export default function Home() {
 	return (
 		<div className="home-page">
@@ -132,6 +155,42 @@ export default function Home() {
 				</section>
 
 				<section className="home-platform" id="why-choose-us" aria-labelledby="home-platform-title"><div className="home-platform__inner"><header className="home-platform__heading"><p className="home-eyebrow">Your learning, in one place</p><h2 id="home-platform-title">See how far<br /><em>you can go.</em></h2><p>Progress grows when it’s easy to see what you’ve done, what you’re learning, and where you can go next.</p><a className="home-button home-button--dark" href="/resources/">Explore Resources <span aria-hidden="true">↗</span></a></header><DashboardPreview /><div className="home-platform__caption"><span>SSA LEARNING SPACE</span><i /><span>LEARN · TRACK · REPEAT</span></div></div></section>
+
+				<section className="home-app" id="ssa-app" aria-labelledby="home-app-title">
+					<div className="home-app__inner">
+						<div className="home-app__copy">
+							<p className="home-eyebrow"><span /> Learn on the go</p>
+							<h2 id="home-app-title">Take SSA<br /><em>with you.</em></h2>
+							<p className="home-app__description">Keep your learning experience close. The SSA mobile app brings lessons, resources, and study activities to your phone.</p>
+							<div className="home-app__downloads" aria-label="SSA app downloads">
+								<p>GET THE SSA APP</p>
+								<div><AppDownloadButton platform="Android" url={ANDROID_APP_URL} /><AppDownloadButton platform="iOS" url={IOS_APP_URL} /></div>
+							</div>
+						</div>
+						<div className="home-app__visual" aria-label="Illustration of the SSA mobile app">
+							<div className="home-app__note home-app__note--top"><span>✳</span><div><strong>SSA AI Tutor</strong><small>Support as you study</small></div></div>
+							<div className="home-app__phone">
+								<div className="home-app__phone-frame"><div className="home-app__phone-screen">
+									<div className="home-app__status"><span>9:41</span><i /><i /><i /></div>
+									<div className="home-app__appbar"><span className="home-app__logo-mark">ssa</span><span>Science Scholar<br /><b>Academy</b></span><i>•••</i></div>
+									<div className="home-app__greeting"><small>YOUR LEARNING SPACE</small><strong>Keep your<br />curiosity going.</strong></div>
+									<div className="home-app__progress"><div><span>THIS WEEK</span><strong>Learning progress</strong></div><b>68<small>%</small></b><i><span /></i></div>
+									<div className="home-app__screen-heading"><strong>Pick up where you left off</strong><span>View all</span></div>
+									<div className="home-app__lesson"><span className="home-app__lesson-icon">B</span><span><small>BIOLOGY · PAPER 1</small><strong>Cell structure</strong><i><b /></i></span><b>→</b></div>
+									<div className="home-app__screen-heading"><strong>Explore your study tools</strong></div>
+									<div className="home-app__tools"><span><i>▶</i>Video lessons</span><span><i>▤</i>eLibrary</span><span><i>✓</i>eExams</span></div>
+									<div className="home-app__tabbar"><span><i>⌂</i>Home</span><span><i>▦</i>Class</span><span><i>▤</i>Library</span><span><i>◉</i>Profile</span></div>
+								</div></div>
+							</div>
+							<div className="home-app__note home-app__note--bottom"><span>✓</span><div><strong>Practice as you go</strong><small>eExams &amp; revision</small></div></div>
+							<div className="home-app__visual-label"><span>01</span><i /> LEARNING, IN YOUR POCKET</div>
+						</div>
+						<div className="home-app__features">
+							<div className="home-app__features-heading"><p className="home-eyebrow">Made for your study rhythm</p><h3>Learning tools<br />that travel with you.</h3></div>
+							<div className="home-app__feature-list">{appFeatures.map(({ symbol, title, detail }) => <article key={title}><span aria-hidden="true">{symbol}</span><div><h4>{title}</h4><p>{detail}</p></div></article>)}</div>
+						</div>
+					</div>
+				</section>
 
 				<section className="home-library" id="resources" aria-labelledby="home-library-title"><div className="home-library__inner"><header className="home-library__heading"><div><p className="home-eyebrow">The SSA resource library</p><h2 id="home-library-title">Useful things to<br /><em>come back to.</em></h2></div><div><p>Good study resources help you turn a difficult topic into a doable next step.</p><a className="home-text-link" href="/resources/">Browse all resources <span aria-hidden="true">↗</span></a></div></header><div className="home-library__shelf"><article className="home-library__card home-library__card--notes"><span className="home-library__card-number">01 / READ</span><div className="home-library__art home-library__art--notes" aria-hidden="true"><i /><i /><i /><b>N</b></div><div className="home-library__card-copy"><div><h3>Study notes</h3><p>Get to the heart of a topic with clear, useful explanations.</p></div><a href="/resources/" aria-label="Explore study notes">↗</a></div></article><article className="home-library__card home-library__card--papers"><span className="home-library__card-number">02 / PREPARE</span><div className="home-library__art home-library__art--papers" aria-hidden="true"><div><span>SSA / EXAM PRACTICE</span><b>PAST<br />PAPERS</b><i>QUESTION 01 — 2025</i></div></div><div className="home-library__card-copy"><div><h3>Past papers</h3><p>Get familiar with exam-style questions and paper formats.</p></div><a href="/resources/" aria-label="Explore past papers">↗</a></div></article><article className="home-library__card home-library__card--revision"><span className="home-library__card-number">03 / PRACTISE</span><div className="home-library__art home-library__art--revision" aria-hidden="true"><div><span>QUICK CHECK</span><strong>Which idea<br />fits best?</strong><i>○ &nbsp; Review the concept</i><i>✓ &nbsp; Apply what you know</i></div></div><div className="home-library__card-copy"><div><h3>Revision materials</h3><p>Revisit concepts and strengthen your understanding through practice.</p></div><a href="/resources/" aria-label="Explore revision materials">↗</a></div></article><article className="home-library__card home-library__card--study"><span className="home-library__card-number">04 / EXPLORE</span><div className="home-library__art home-library__art--study" aria-hidden="true"><div className="home-library__study-lines"><i /><i /><i /><i /></div><span className="home-library__study-tag">YOUR NEXT TOPIC</span><strong>Small steps<br />make strong roots.</strong><span className="home-library__study-arrow">→</span></div><div className="home-library__card-copy"><div><h3>Study resources</h3><p>Find support for the moments you need a little more help.</p></div><a href="/resources/" aria-label="Explore study resources">↗</a></div></article></div></div></section>
 

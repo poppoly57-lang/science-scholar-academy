@@ -471,3 +471,39 @@
 		transition: none;
 	}
 }
+
+/* Typography hierarchy */
+.courses-page__eyebrow { font-size: 11px; }
+.courses-page__intro h1 { font-size: clamp(48px, 5.1vw, 64px); }
+.courses-page__intro-description,
+.courses-page__catalog-heading > p,
+.courses-page__card > p,
+.courses-page__approach-heading > p:last-child,
+.courses-page__approach-step p,
+.courses-page__cta-inner > div > p:last-child { font-size: 17px; }
+.courses-page__button { font-size: 15px; }
+.courses-page__catalog-heading h2 { font-size: clamp(38px, 4vw, 46px); }
+.courses-page__card h2 { font-size: 23px; }
+.courses-page__approach h2 { font-size: clamp(40px, 4.3vw, 50px); }
+.courses-page__approach-step h3 { font-size: 19px; }
+.courses-page__cta h2 { font-size: clamp(34px, 3.4vw, 42px); }
+
+@media (max-width: 900px) {
+	.courses-page__intro h1 { font-size: clamp(42px, 5.8vw, 54px); }
+	.courses-page__approach h2 { font-size: clamp(36px, 4.8vw, 44px); }
+}
+
+@media (max-width: 620px) {
+	.courses-page__intro h1 { font-size: clamp(36px, 9vw, 42px); }
+	.courses-page__catalog-heading h2,
+	.courses-page__approach h2 { font-size: clamp(31px, 7vw, 35px); }
+	.courses-page__cta h2 { font-size: clamp(30px, 7vw, 34px); }
+	.courses-page__intro-description,
+	.courses-page__catalog-heading > p,
+	.courses-page__card > p,
+	.courses-page__approach-heading > p:last-child,
+	.courses-page__approach-step p,
+	.courses-page__cta-inner > div > p:last-child { font-size: 16px; }
+	.courses-page__card h2 { font-size: 20px; }
+	.courses-page__button { font-size: 15px; }
+}
