@@ -88,6 +88,7 @@
 .navbar__links a:focus-visible,
 .navbar__login:focus-visible,
 .navbar__brand:focus-visible,
+.navbar__student-login:focus-visible,
 .navbar__cta:focus-visible,
 .navbar__toggle:focus-visible {
 	outline: 3px solid #9ac8ae;
@@ -96,6 +97,32 @@
 
 .navbar__actions {
 	gap: 24px;
+	flex-wrap: wrap;
+	justify-content: flex-end;
+}
+
+.navbar__student-login {
+	min-height: 40px;
+	padding: 0 16px;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: 1px solid rgba(8, 38, 74, 0.14);
+	border-radius: 14px;
+	background: rgba(25, 197, 229, 0.1);
+	color: #0d4d75;
+	font-size: 14px;
+	font-weight: 700;
+	text-decoration: none;
+	transition: background-color 160ms ease, border-color 160ms ease,
+		transform 160ms ease, color 160ms ease;
+}
+
+.navbar__student-login:hover {
+	transform: translateY(-1px);
+	border-color: rgba(8, 38, 74, 0.22);
+	background: rgba(25, 197, 229, 0.16);
+	color: #0b4467;
 }
 
 .navbar__cta {
@@ -219,7 +246,7 @@
 	}
 
 	.navbar__menu--open {
-		max-height: 390px;
+		max-height: 450px;
 		padding-bottom: 18px;
 		visibility: visible;
 		opacity: 1;
@@ -234,7 +261,8 @@
 	}
 
 	.navbar__links a,
-	.navbar__login {
+	.navbar__login,
+	.navbar__student-login {
 		min-height: 44px;
 		display: flex;
 		align-items: center;

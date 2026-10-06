@@ -1,0 +1,36 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /students/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /subjects/{subjectId} {
+      allow read: if request.auth != null && resource.data.studentIds is list && request.auth.uid in resource.data.studentIds;
+      allow write: if false;
+    }
+
+    match /lessons/{lessonId} {
+      allow read: if request.auth != null && resource.data.studentIds is list && request.auth.uid in resource.data.studentIds;
+      allow write: if false;
+    }
+
+    match /studentProgress/{userId} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+
+    match /studentActivity/{activityId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow write: if false;
+    }
+
+    match /practiceResults/{resultId} {
+      allow read: if request.auth != null && resource.data.userId == request.auth.uid;
+      allow write: if false;
+    }
+
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

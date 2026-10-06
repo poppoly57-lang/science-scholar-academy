@@ -77,6 +77,13 @@ export default function Navbar() {
               Contact Us
             </a>
             <a
+              className="navbar__student-login"
+              href="/dashboard"
+              onClick={closeMenu}
+            >
+              Student Login
+            </a>
+            <a
               className="navbar__cta"
               href="/#get-started"
               onClick={closeMenu}
