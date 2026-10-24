@@ -72,7 +72,7 @@ export default function App() {
 	if (pathname === '/signup') {
 		return <SignupPage />
 	}
-	if (pathname === '/dashboard') {
+	if (pathname === '/dashboard' || pathname.startsWith('/dashboard/')) {
 		return <ProtectedDashboard />
 	}
 

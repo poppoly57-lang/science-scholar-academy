@@ -107,6 +107,33 @@
   transition: background-color 180ms ease, transform 180ms ease, color 180ms ease;
 }
 
+.dashboard-sidebar__nav a {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  border: 0;
+  padding: 12px;
+  border-radius: 14px;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  text-decoration: none;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.dashboard-sidebar__nav a:hover,
+.dashboard-sidebar__nav a:focus-visible {
+  background: rgba(255, 255, 255, 0.06);
+  outline: none;
+}
+
+.dashboard-sidebar__nav a.is-active {
+  background: rgba(25, 197, 229, 0.18);
+  color: #d9f6fd;
+  box-shadow: inset 0 0 0 1px rgba(25, 197, 229, 0.22);
+}
+
 .dashboard-sidebar button:hover,
 .dashboard-sidebar button:focus-visible {
   background: rgba(255, 255, 255, 0.06);
@@ -120,6 +147,7 @@
 }
 
 .dashboard-sidebar__nav .dashboard-icon,
+.dashboard-sidebar__nav a .dashboard-icon,
 .dashboard-sidebar__secondary .dashboard-icon,
 .dashboard-profile-menu .dashboard-icon,
 .dashboard-search .dashboard-icon,

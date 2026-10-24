@@ -1,5 +1,16 @@
 # React + Vite
 
+## Subject catalog setup
+
+The initial Science Scholar Academy catalog is maintained in `src/data/subjectSeed.js`. After signing in with an account that has the Firebase custom claim `admin: true`, the catalog can be safely created once from the browser console:
+
+```js
+const { seedSubjectsIfMissing } = await import('/src/services/subjectService.js')
+await seedSubjectsIfMissing()
+```
+
+The operation creates only missing subject documents and marks them unpublished. An administrator must publish each subject by setting `published` to `true` in Firestore before students can read it. Firestore rules reserve catalog and topic writes for accounts with the trusted `admin` custom claim; students can read published entries only.
+
 This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
 
 Currently, two official plugins are available:

@@ -3,10 +3,11 @@ import './DashboardPage.css'
 import { signOutFromFirebase } from '../firebase/firebase.js'
 import { getStudentDashboard } from '../services/dashboardService.js'
 import { getCurrentStudentProfile } from '../services/studentService.js'
+import SubjectsPage from './SubjectsPage.jsx'
 
 const mainNav = [
-  { label: 'Dashboard', icon: 'dashboard', active: true },
-  { label: 'My Subjects', icon: 'subjects' },
+  { label: 'Dashboard', icon: 'dashboard', href: '/dashboard' },
+  { label: 'My Subjects', icon: 'subjects', href: '/dashboard/subjects' },
   { label: 'Lessons', icon: 'lessons' },
   { label: 'Practice', icon: 'practice' },
   { label: 'Resources', icon: 'resources' },
@@ -240,32 +241,11 @@ function getStudentInitials(name) {
     : parts[0]?.slice(0, 2).toUpperCase() || 'S'
 }
 
-function withRequestDeadline(request, message) {
-  const signal = AbortSignal.timeout(15000)
-
-  return new Promise((resolve, reject) => {
-    const onDeadline = () => reject(new Error(message))
-
-    if (signal.aborted) {
-      onDeadline()
-      return
-    }
-
-    signal.addEventListener('abort', onDeadline, { once: true })
-    Promise.resolve(request).then(
-      (result) => {
-        signal.removeEventListener('abort', onDeadline)
-        resolve(result)
-      },
-      (error) => {
-        signal.removeEventListener('abort', onDeadline)
-        reject(error)
-      },
-    )
-  })
-}
-
 export default function DashboardPage({ authUser }) {
+  const routePath = window.location.pathname.replace(/\/+$/, '') || '/dashboard'
+  const subjectMatch = routePath.match(/^\/dashboard\/subjects(?:\/([^/]+))?$/)
+  const subjectId = subjectMatch?.[1] || ''
+  const isSubjectsRoute = Boolean(subjectMatch)
   const [mobileNavOpen, setMobileNavOpen] = useState(false)
   const [profileState, setProfileState] = useState({ loading: true, error: '', student: null })
   const [dashboardState, setDashboardState] = useState({
@@ -288,13 +268,14 @@ export default function DashboardPage({ authUser }) {
 
     const loadProfile = async () => {
       try {
-        const student = await withRequestDeadline(
-          getCurrentStudentProfile(),
-          'Your student profile could not be loaded. Showing your Firebase account details instead.',
-        )
+        const student = await getCurrentStudentProfile()
         if (isMounted) setProfileState({ loading: false, error: '', student })
       } catch (error) {
-        console.warn('Unable to load student profile.', error)
+        console.error('Firestore error:', {
+          code: error?.code,
+          message: error?.message,
+          name: error?.name,
+        })
         if (isMounted) {
           setProfileState({
             loading: false,
@@ -309,10 +290,7 @@ export default function DashboardPage({ authUser }) {
 
     const loadDashboard = async () => {
       try {
-        const dashboardData = await withRequestDeadline(
-          getStudentDashboard(),
-          'Your learning data could not be loaded right now. Your dashboard is still available.',
-        )
+        const dashboardData = await getStudentDashboard()
 
         if (isMounted) {
           setDashboardState({
@@ -321,7 +299,11 @@ export default function DashboardPage({ authUser }) {
           })
         }
       } catch (error) {
-        console.warn('Unable to load dashboard data.', error)
+        console.error('Firestore error:', {
+          code: error?.code,
+          message: error?.message,
+          name: error?.name,
+        })
 
         if (isMounted) {
           setDashboardState((current) => ({
@@ -336,12 +318,12 @@ export default function DashboardPage({ authUser }) {
     }
 
     loadProfile()
-    loadDashboard()
+    if (!isSubjectsRoute) loadDashboard()
 
     return () => {
       isMounted = false
     }
-  }, [authUser?.uid])
+  }, [authUser?.uid, isSubjectsRoute])
 
   const handleLogout = async () => {
     try {
@@ -401,12 +383,12 @@ export default function DashboardPage({ authUser }) {
 
           <nav className="dashboard-sidebar__nav" aria-label="Dashboard sections">
             <ul>
-              {mainNav.map(({ label, icon, active }) => (
+              {mainNav.map(({ label, icon, href }) => (
                 <li key={label}>
-                  <button type="button" className={active ? 'is-active' : ''}>
+                  <a href={href} className={(isSubjectsRoute ? href === '/dashboard/subjects' : href === '/dashboard') ? 'is-active' : ''}>
                     <Icon type={icon} />
                     <span>{label}</span>
-                  </button>
+                  </a>
                 </li>
               ))}
             </ul>
@@ -442,7 +424,7 @@ export default function DashboardPage({ authUser }) {
           <header className="dashboard-header">
             <div className="dashboard-header__title-wrap">
               <div className="dashboard-header__badge">Student Area</div>
-              <h1>Dashboard</h1>
+              <h1>{isSubjectsRoute ? (subjectId ? 'Subject' : 'My Subjects') : 'Dashboard'}</h1>
             </div>
 
             <div className="dashboard-header__actions">
@@ -464,6 +446,10 @@ export default function DashboardPage({ authUser }) {
           </header>
 
           <main className="dashboard-content">
+            {isSubjectsRoute ? (
+              <SubjectsPage subjectId={subjectId} />
+            ) : (
+              <>
             {(profileState.error || dashboardState.error) && (
               <div role="status" style={{ marginBottom: '16px', padding: '12px 14px', border: '1px solid #dfeaf1', borderRadius: '12px', background: '#fff', color: '#5f7286' }}>
                 {profileState.error || dashboardState.error}
@@ -711,6 +697,8 @@ export default function DashboardPage({ authUser }) {
               <button type="button" className="dashboard-quick-action">Browse Resources</button>
               <button type="button" className="dashboard-quick-action">View Progress</button>
             </section>
+              </>
+            )}
           </main>
         </div>
       </div>

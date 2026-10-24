@@ -1,27 +1,22 @@
 import { firebaseAuth, initializeFirebase, getDbInstance } from '../firebase/firebase.js'
-import { doc, serverTimestamp, setDoc } from 'firebase/firestore'
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  orderBy,
+  query,
+  serverTimestamp,
+  setDoc,
+  where,
+} from 'firebase/firestore'
+import { getPublishedSubjects } from './subjectService.js'
 
-const ssaSubjects = [
-  { id: 'physics-1', name: 'Physics Paper 1', paper: 'Paper 1', icon: 'physics' },
-  { id: 'physics-2', name: 'Physics Paper 2', paper: 'Paper 2', icon: 'physics' },
-  { id: 'chemistry-1', name: 'Chemistry Paper 1', paper: 'Paper 1', icon: 'chemistry' },
-  { id: 'chemistry-2', name: 'Chemistry Paper 2', paper: 'Paper 2', icon: 'chemistry' },
-  { id: 'mathematics-1', name: 'Pure Mathematics Paper 1', paper: 'Paper 1', icon: 'mathematics' },
-  { id: 'mathematics-2', name: 'Pure Mathematics Paper 2', paper: 'Paper 2', icon: 'mathematics' },
-  { id: 'biology-1', name: 'Biology Paper 1', paper: 'Paper 1', icon: 'biology' },
-  { id: 'biology-2', name: 'Biology Paper 2', paper: 'Paper 2', icon: 'biology' },
-  { id: 'submath', name: 'Submath', paper: 'Course', icon: 'submath' },
-  { id: 'ict-1', name: 'ICT Paper 1', paper: 'Paper 1', icon: 'ict' },
-  { id: 'ict-2', name: 'ICT Paper 2', paper: 'Paper 2', icon: 'ict' },
-  { id: 'agriculture', name: 'Agriculture', paper: 'Course', icon: 'agriculture' },
-].map((subject) => ({ ...subject, progress: 0, status: 'Not started' }))
-
-async function loadModule(moduleName) {
-  try {
-    return await new Function('moduleName', 'return import(moduleName)')(moduleName)
-  } catch (error) {
-    return null
-  }
+const dashboardSubjectNames = {
+  biology: 'Biology',
+  chemistry: 'Chemistry',
+  physics: 'Physics',
+  'pure mathematics': 'Mathematics',
 }
 
 const emptyDashboard = {
@@ -47,32 +42,6 @@ function toProgressNumber(value, fallback = 0) {
   return fallback
 }
 
-async function readCollectionByQuery(collectionName, queryBuilder) {
-  const { configured } = await initializeFirebase()
-  if (!configured) {
-    return []
-  }
-
-  const firestoreModule = await loadModule('firebase/firestore')
-  const { collection, getDocs, query, where } = firestoreModule ?? {}
-  const db = await getDbInstance()
-
-  if (!db) {
-    return []
-  }
-
-  try {
-    const collectionRef = collection(db, collectionName)
-    const firestoreQuery = queryBuilder({ collectionRef, query, where })
-    const snapshot = await getDocs(firestoreQuery)
-
-    return snapshot.docs.map((document) => ({ id: document.id, ...document.data() }))
-  } catch (error) {
-    console.warn(`Unable to load ${collectionName} data.`, error)
-    return []
-  }
-}
-
 export async function getAssignedSubjects(userId) {
   const { configured } = await initializeFirebase()
   if (!configured || !userId) {
@@ -80,12 +49,6 @@ export async function getAssignedSubjects(userId) {
   }
 
   try {
-    const firestoreModule = await loadModule('firebase/firestore')
-    const { collection, getDocs, query, where } = firestoreModule ?? {}
-    if (!collection || !getDocs || !query || !where) {
-      return []
-    }
-
     const db = await getDbInstance()
     const subjectsRef = collection(db, 'subjects')
     const subjectsQuery = query(subjectsRef, where('studentIds', 'array-contains', userId))
@@ -93,7 +56,7 @@ export async function getAssignedSubjects(userId) {
 
     return snapshot.docs.map((document) => ({ id: document.id, ...document.data() }))
   } catch (error) {
-    console.warn('Unable to load student subjects.', error)
+    console.error('Firestore error:', { code: error?.code, message: error?.message, name: error?.name })
     return []
   }
 }
@@ -105,12 +68,6 @@ export async function getStudentLessons(userId) {
   }
 
   try {
-    const firestoreModule = await loadModule('firebase/firestore')
-    const { collection, getDocs, query, where } = firestoreModule ?? {}
-    if (!collection || !getDocs || !query || !where) {
-      return []
-    }
-
     const db = await getDbInstance()
     const lessonsRef = collection(db, 'lessons')
     const lessonsQuery = query(lessonsRef, where('studentIds', 'array-contains', userId))
@@ -118,7 +75,7 @@ export async function getStudentLessons(userId) {
 
     return snapshot.docs.map((document) => ({ id: document.id, ...document.data() }))
   } catch (error) {
-    console.warn('Unable to load student lessons.', error)
+    console.error('Firestore error:', { code: error?.code, message: error?.message, name: error?.name })
     return []
   }
 }
@@ -130,18 +87,12 @@ export async function getStudentProgress(userId) {
   }
 
   try {
-    const firestoreModule = await loadModule('firebase/firestore')
-    const { doc, getDoc } = firestoreModule ?? {}
-    if (!doc || !getDoc) {
-      return []
-    }
-
     const db = await getDbInstance()
     const progressSnapshot = await getDoc(doc(db, 'studentProgress', userId))
 
     return progressSnapshot.exists() ? [{ id: progressSnapshot.id, ...progressSnapshot.data() }] : []
   } catch (error) {
-    console.warn('Unable to load student progress.', error)
+    console.error('Firestore error:', { code: error?.code, message: error?.message, name: error?.name })
     return []
   }
 }
@@ -153,12 +104,6 @@ export async function getPracticeResults(userId) {
   }
 
   try {
-    const firestoreModule = await loadModule('firebase/firestore')
-    const { collection, getDocs, query, where, orderBy } = firestoreModule ?? {}
-    if (!collection || !getDocs || !query || !where || !orderBy) {
-      return []
-    }
-
     const db = await getDbInstance()
     const resultsRef = collection(db, 'practiceResults')
     const resultsQuery = query(resultsRef, where('userId', '==', userId), orderBy('completedAt', 'desc'))
@@ -166,7 +111,7 @@ export async function getPracticeResults(userId) {
 
     return snapshot.docs.map((document) => ({ id: document.id, ...document.data() }))
   } catch (error) {
-    console.warn('Unable to load practice results.', error)
+    console.error('Firestore error:', { code: error?.code, message: error?.message, name: error?.name })
     return []
   }
 }
@@ -178,12 +123,6 @@ export async function getRecentActivities(userId) {
   }
 
   try {
-    const firestoreModule = await loadModule('firebase/firestore')
-    const { collection, getDocs, query, where, orderBy } = firestoreModule ?? {}
-    if (!collection || !getDocs || !query || !where || !orderBy) {
-      return []
-    }
-
     const db = await getDbInstance()
     const activitiesRef = collection(db, 'studentActivity')
     const activitiesQuery = query(activitiesRef, where('userId', '==', userId), orderBy('createdAt', 'desc'))
@@ -191,7 +130,7 @@ export async function getRecentActivities(userId) {
 
     return snapshot.docs.map((document) => ({ id: document.id, ...document.data() }))
   } catch (error) {
-    console.warn('Unable to load recent activities.', error)
+    console.error('Firestore error:', { code: error?.code, message: error?.message, name: error?.name })
     return []
   }
 }
@@ -216,11 +155,12 @@ export async function getStudentDashboard() {
   }
 
   try {
-    const [lessons, progress, practice, activity] = await Promise.all([
+    const [lessons, progress, practice, activity, publishedSubjects] = await Promise.all([
       getStudentLessons(userId),
       getStudentProgress(userId),
       getPracticeResults(userId),
       getRecentActivities(userId),
+      getPublishedSubjects(),
     ])
 
     const effectiveLessons = lessons.filter((lesson) => (
@@ -238,6 +178,23 @@ export async function getStudentDashboard() {
       .filter((item) => toProgressNumber(item.progress, 0) > 0 || item.completed === true)
       .map((item) => item.subjectId || item.subjectName || item.subject)
       .filter(Boolean)).size
+    const progressBySubject = progress[0]?.subjects || {}
+    const dashboardSubjects = publishedSubjects.map((subject) => {
+      const subjectProgress = progressBySubject[subject.id] || {}
+      const progressValue = Number(subjectProgress.percentage ?? subjectProgress.progress)
+      const subjectPercentage = Number.isFinite(progressValue)
+        ? Math.max(0, Math.min(100, Math.round(progressValue)))
+        : 0
+
+      return {
+        ...subject,
+        name: dashboardSubjectNames[subject.id] || subject.name || subject.id,
+        paper: subject.paper || (Array.isArray(subject.papers) ? subject.papers.join(' + ') : '') || 'Course',
+        icon: subject.icon || (subject.id === 'pure mathematics' ? 'mathematics' : subject.id),
+        progress: subjectPercentage,
+        status: subjectProgress.status || (subjectPercentage > 0 ? 'In progress' : 'Not started'),
+      }
+    })
     const latestLesson = effectiveLessons
       .slice()
       .sort((a, b) => toProgressNumber(b.lastOpened ?? b.updatedAt ?? 0, 0) - toProgressNumber(a.lastOpened ?? a.updatedAt ?? 0, 0))[0]
@@ -249,7 +206,7 @@ export async function getStudentDashboard() {
         { id: 'lessons', icon: 'lessons', value: `${completedLessons}`, label: 'Lessons Completed', detail: 'Completed so far' },
         { id: 'score', icon: 'spark', value: `${practice.length}`, label: 'Practice Tests', detail: 'Completed attempts' },
       ],
-      subjects: ssaSubjects,
+      subjects: dashboardSubjects,
       lessons: effectiveLessons,
       practice: practice.length > 0 ? practice : [],
       resources: [],
